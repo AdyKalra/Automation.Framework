@@ -1,0 +1,34 @@
+﻿using System;
+
+namespace Winium.Core.Framework.Utilities
+{
+    public class FindsByAttribute : Attribute
+    {
+        public How How;
+        public string Using;
+
+        public string Page;
+        public string Field;
+
+        public string[] parameters;
+    }
+
+    public enum How
+    {
+        Id,
+        Name,
+        Xpath,
+        TagName,
+        CssSelector,
+        LinkText,
+        ClassName,
+        PartialLinkText
+    }
+
+    internal class Browser
+    {
+        public const string Chrome = "Chrome";
+        public const string Firefox = "Firefox";
+        public const string InternetExplorer = "InternetExplorer";
+    }
+}
