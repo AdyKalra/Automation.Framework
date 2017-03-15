@@ -41,12 +41,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Pages\GoogleSearchPage.cs" />
+    <Compile Include="Pages\HotelManagement\AddEditCustomerWindow.cs" />
+    <Compile Include="Pages\HotelManagement\CustomersWindow.cs" />
+    <Compile Include="Pages\HotelManagement\HotelManagementWindow.cs" />
     <Compile Include="Pages\SapientGlobalMarketsPage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ObjectRepository\GoogleSearchPage.xml" />
-    <Content Include="ObjectRepository\SapientGlobalMarketsPage.xml" />
+    <Content Include="ObjectRepository\HotelManagement\AddEditCustomerWindow.xml" />
+    <Content Include="ObjectRepository\HotelManagement\CustomersWindow.xml" />
+    <Content Include="ObjectRepository\WebAplication\GoogleSearchPage.xml" />
+    <Content Include="ObjectRepository\HotelManagement\HotelManagementWindow.xml" />
+    <Content Include="ObjectRepository\WebAplication\SapientGlobalMarketsPage.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Selenium.Core.Framework\Selenium.Core.Framework.csproj">
@@ -54,6 +60,7 @@
       <Name>Selenium.Core.Framework</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -3,19 +3,23 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.IE;
+using OpenQA.Selenium.Remote;
+using OpenQA.Selenium.Winium;
 using Selenium.Core.Framework.Exceptions;
 using Selenium.Core.Framework.Logger;
 using Selenium.Core.Framework.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
+using System.Threading;
 
 namespace Selenium.Core.Framework.Driver
 {
     internal class NativeWebDriver
     {
         #region Config Variables
-        private static string _browserName;
+        private static string _platform;
         private static string _driverPath;
         private static string _browserConfigXmlPath;
         private static string _geckoDriverPath;
@@ -35,10 +39,14 @@ namespace Selenium.Core.Framework.Driver
         private static readonly Lazy<NativeWebDriver> _instance = new Lazy<NativeWebDriver>(() =>
         {
             InitializeConfigVariables();
-            InitiateDriver(_browserName);
-            SetImplicitWait();
-            SetPageTimeout();
-            
+            InitiateDriver(_platform);
+
+            if(_platform != DriverPlatform.Winium)
+            {
+                SetImplicitWait();
+                SetPageTimeout();
+            }
+
             return new NativeWebDriver();
         });
 
@@ -65,16 +73,20 @@ namespace Selenium.Core.Framework.Driver
                 FileLogger.Log("Browser Selection:" + browser + "\n");
                 switch (browser)
                 {
-                    case Browser.InternetExplorer:
+                    case DriverPlatform.InternetExplorer:
                         _nativeWebDriver = InitiateIeDriver();
                         break;
 
-                    case Browser.Chrome:
+                    case DriverPlatform.Chrome:
                         _nativeWebDriver = InitiateChromeDriver();
                         break;
 
-                    case Browser.Firefox:
+                    case DriverPlatform.Firefox:
                         _nativeWebDriver = InitiateFirefoxDriver();
+                        break;
+
+                    case DriverPlatform.Winium:
+                        _nativeWebDriver = InititeWiniumDriver();
                         break;
 
                     default:
@@ -139,6 +151,30 @@ namespace Selenium.Core.Framework.Driver
             return new InternetExplorerDriver(_driverPath, options);
         }
 
+        private static IWebDriver InititeWiniumDriver()
+        {
+            try
+            {
+                var path = AppDomain.CurrentDomain.BaseDirectory + @"../../../Lib/Winium.Desktop.Driver.exe";
+                Process.Start(path);
+                Thread.Sleep(3000);
+
+                FileLogger.Log("Initiating Winium Driver");
+                var options = new DesktopOptions();
+                options.ApplicationPath = ConfigurationManager.AppSettings["ApplicationPath"];
+
+                var capabilities = (DesiredCapabilities)options.ToCapabilities();
+                var driver = new RemoteWebDriver(new Uri("http://localhost:9999"), capabilities);
+                Thread.Sleep(5000);
+                return driver;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         private static void SetPageTimeout()
         {
             _nativeWebDriver.Manage().Timeouts().SetPageLoadTimeout(TimeSpan.FromSeconds(_pageLoadTimeOut));
@@ -182,11 +218,11 @@ namespace Selenium.Core.Framework.Driver
 
             _browserConfigXmlPath = projectPath + "BrowserConfig.xml";
 
-            _browserName = ConfigurationManager.AppSettings["Browser"];
+            _platform = ConfigurationManager.AppSettings["Browser"];
 
-            _firefoxPreferences = GetBrowserPreferences(Browser.Firefox);
-            _chromePreferences = GetBrowserPreferences(Browser.Chrome);
-            _iePreferences = GetBrowserPreferences(Browser.InternetExplorer);
+            _firefoxPreferences = GetBrowserPreferences(Utilities.DriverPlatform.Firefox);
+            _chromePreferences = GetBrowserPreferences(Utilities.DriverPlatform.Chrome);
+            _iePreferences = GetBrowserPreferences(Utilities.DriverPlatform.InternetExplorer);
 
             _implicitWaitTimeOut = Convert.ToInt32
                 (XmlReader.GetNodeValue(_browserConfigXmlPath, "ImplicitWaitinSeconds"));
@@ -201,8 +237,25 @@ namespace Selenium.Core.Framework.Driver
             {
                 FileLogger.Log("Disposing Driver");
                 _nativeWebDriver.Close();
-                _nativeWebDriver.Dispose();
                 _nativeWebDriver.Quit();
+
+                switch (_platform)
+                {
+                    case DriverPlatform.Chrome:
+                        KillChromeProcess();
+                        break;
+
+                    case DriverPlatform.InternetExplorer:
+                        KillIeProcess();
+                        break;
+
+                    case DriverPlatform.Winium:
+                        KillWiniumProcess();
+                        break;
+
+                    default:
+                        throw new Exception(_platform + " not a valid process to kill");
+                }
             }
 
             catch (Exception ex)
@@ -210,6 +263,36 @@ namespace Selenium.Core.Framework.Driver
                 throw new DriverDisposeException(ex);
             }
 
+        }
+
+        void KillWiniumProcess()
+        {
+            var processes = Process.GetProcessesByName("Winium.Desktop.Driver");
+            
+            foreach(var process in processes)
+            {
+                process.Kill();
+            }
+        }
+
+        void KillChromeProcess()
+        {
+            var processes = Process.GetProcessesByName("chromedriver");
+
+            foreach (var process in processes)
+            {
+                process.Kill();
+            }
+        }
+
+        void KillIeProcess()
+        {
+            var processes = Process.GetProcessesByName("IEDriverServer");
+
+            foreach (var process in processes)
+            {
+                process.Kill();
+            }
         }
     }
 }

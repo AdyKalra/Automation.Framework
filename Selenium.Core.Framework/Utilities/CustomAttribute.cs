@@ -25,10 +25,11 @@ namespace Selenium.Core.Framework.Utilities
         PartialLinkText
     }
 
-    internal class Browser
+    internal class DriverPlatform
     {
         public const string Chrome = "Chrome";
         public const string Firefox = "Firefox";
         public const string InternetExplorer = "InternetExplorer";
+        public const string Winium = "Winium";
     }
 }

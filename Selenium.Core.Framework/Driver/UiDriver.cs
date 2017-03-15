@@ -313,7 +313,7 @@ namespace Selenium.Core.Framework.Driver
 
             catch(Exception ex)
             {
-                TakeScreenshot("FindElementException");
+                //TakeScreenshot("FindElementException");
                 FileLogger.Log(string.Format("No Such Element Found. FindBy Type: {0} FIndByValue:{1}", findBy, findByvalue));
                 throw new NoSuchElementFoundException(findBy, findByvalue, ex);
             }
