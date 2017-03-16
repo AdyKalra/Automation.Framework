@@ -61,12 +61,21 @@ namespace Data.Utilities
 
         public static XDocument LoadXml(string filePath)
         {
-            if (File.Exists(filePath) || !string.IsNullOrEmpty(filePath))
+            try
             {
-                return XDocument.Load(filePath);
-            }
+                if (File.Exists(filePath) || !string.IsNullOrEmpty(filePath))
+                {
+                    return XDocument.Load(filePath);
+                }
 
-            throw new Exception(string.Format("{0} is not a valid File Path", filePath));
+                throw new Exception(string.Format("{0} is not a valid File Path", filePath));
+            }
+            
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            
         }
 
         public static string GetNodeValue(string filePath, string nodeName)

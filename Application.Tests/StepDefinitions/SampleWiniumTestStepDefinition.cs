@@ -1,9 +1,11 @@
 ﻿using Application.Library.Pages.HotelManagement;
 using Microsoft.Practices.Unity;
+using Selenium.Core.Framework.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using TechTalk.SpecFlow;
 
 namespace Application.Tests.StepDefinitions
@@ -14,6 +16,7 @@ namespace Application.Tests.StepDefinitions
         AddEditCustomerWindow addeditCustomer;
         CustomersWindow customer;
         HotelManagementWindow mainWindow;
+        UiDriver driver;
 
         public SampleWiniumTestStepDefinition()
         {
@@ -21,6 +24,7 @@ namespace Application.Tests.StepDefinitions
             addeditCustomer = unity.Resolve<AddEditCustomerWindow>();
             customer = unity.Resolve<CustomersWindow>();
             mainWindow = unity.Resolve<HotelManagementWindow>();
+            driver = TestBase.Driver;
         }
 
         [When(@"I Click Customers Tab")]
@@ -58,6 +62,21 @@ namespace Application.Tests.StepDefinitions
         {
             addeditCustomer.ClickSaveButton();
         }
+
+        [When(@"I handle the Popup by Clicking (.*)")]
+        public void WhenIHandleThePopupByClicking(string option)
+        {
+            if(option.ToLower() == "yes")
+            {
+                driver.WindowsWarningOrConfirmationAccept("Customer already exists");
+            }
+
+            else
+            {
+                driver.WindowsWarningOrConfirmationDismiss("Customer already exists");
+            }
+        }
+
 
     }
 }

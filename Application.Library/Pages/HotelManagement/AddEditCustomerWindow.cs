@@ -23,6 +23,9 @@ namespace Application.Library.Pages.HotelManagement
         [FindsBy]
         private Button SaveButton;
 
+        [FindsBy]
+        private Button AlertYes;
+
         public void SetNameAndSurname(string value)
         {
             NameandSurnameTextbox.SetText(value);
@@ -41,6 +44,11 @@ namespace Application.Library.Pages.HotelManagement
         public void ClickSaveButton()
         {
             SaveButton.Click();
+        }
+
+        public void ClickYes()
+        {
+            AlertYes.Click();
         }
     }
 }

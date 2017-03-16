@@ -16,6 +16,7 @@ namespace Application.Library.Pages.HotelManagement
 
         public void ClickCustomersTab()
         {
+            CustomersTab.WaitTillClickable(120);
             CustomersTab.Click();
         }
     }

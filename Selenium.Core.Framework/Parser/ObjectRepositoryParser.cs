@@ -40,24 +40,33 @@ namespace Selenium.Core.Framework.Parser
 
         private static Dictionary<string, XDocument> LoadAllXmls()
         {
-            var xmlPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+            try
+            {
+                var xmlPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
                 ConfigurationManager.AppSettings["XmlFilesPath"]);
 
-            var xmlDocuments = new Dictionary<string, XDocument>();
+                var xmlDocuments = new Dictionary<string, XDocument>();
 
-            var filesPath = Directory.GetFiles(xmlPath, "*.xml", SearchOption.AllDirectories);
+                var filesPath = Directory.GetFiles(xmlPath, "*.xml", SearchOption.AllDirectories);
 
-            if(filesPath.Length == 0)
-            {
-                throw new Exception("No Xml Files found");
+                if (filesPath.Length == 0)
+                {
+                    throw new Exception("No Xml Files found");
+                }
+
+                foreach (var file in filesPath)
+                {
+                    xmlDocuments.Add(GetFileName(file), XmlReader.LoadXml(file));
+                }
+
+                return xmlDocuments;
             }
 
-            foreach(var file in filesPath)
+            catch(Exception ex)
             {
-                xmlDocuments.Add(GetFileName(file), XmlReader.LoadXml(file));
+                throw new Exception(ex.Message);
             }
-
-            return xmlDocuments;
+            
         }
 
         private static string GetFileName(string filePath)

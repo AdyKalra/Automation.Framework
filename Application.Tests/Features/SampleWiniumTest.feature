@@ -7,7 +7,7 @@ Scenario Outline: Add a New Customer
 	And I Set Address as <Address>
 	And I Set PhoneNumber as <Phone>
 	And I Click Save Button
-	#Then the result should be 120 on the screen
+	And I handle the Popup by Clicking No
 
 	Examples: 
 	| Name      | Address   | Phone  |

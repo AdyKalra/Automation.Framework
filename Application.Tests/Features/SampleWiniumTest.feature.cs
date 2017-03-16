@@ -83,6 +83,8 @@ this.ScenarioSetup(scenarioInfo);
  testRunner.And(string.Format("I Set PhoneNumber as {0}", phone), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 9
  testRunner.And("I Click Save Button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 10
+ testRunner.And("I handle the Popup by Clicking No", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }

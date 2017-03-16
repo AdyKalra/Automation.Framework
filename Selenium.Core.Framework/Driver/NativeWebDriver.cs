@@ -157,7 +157,6 @@ namespace Selenium.Core.Framework.Driver
             {
                 var path = AppDomain.CurrentDomain.BaseDirectory + @"../../../Lib/Winium.Desktop.Driver.exe";
                 Process.Start(path);
-                Thread.Sleep(3000);
 
                 FileLogger.Log("Initiating Winium Driver");
                 var options = new DesktopOptions();

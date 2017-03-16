@@ -247,24 +247,6 @@ namespace Selenium.Core.Framework.Driver
             return _nativeWebDriver.WindowHandles;
         }
 
-        public void HandleFileUploadWindow(string filepath)
-        {
-            try
-            {
-                string windowTitle = GetBrowserName() == "internet explorer" ?
-                 "Choose File to Upload" : "Open";
-
-                AutoItX.WinWait(windowTitle, "File &name:", 10);
-                AutoItX.ControlSetText(windowTitle, "", "[CLASS:Edit; INSTANCE:1]", filepath);
-                AutoItX.ControlClick(windowTitle, "", "[CLASS:Button; INSTANCE:1]");
-                AutoItX.WinWaitClose(windowTitle, "File &name:", 10);
-            }
-
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
         #endregion
 
         #region Find Element Methods
@@ -594,6 +576,16 @@ namespace Selenium.Core.Framework.Driver
             var element = FindElement(findBy, findByValue);
             _actions.ContextClick(element).Build().Perform();
         }
+
+        public void KeyEnter()
+        {
+            _actions.SendKeys(Keys.Enter);
+        }
+
+        public void KeyTab()
+        {
+            _actions.SendKeys(Keys.Tab);
+        }
         #endregion
 
         #region Screenshot Capture Methods
@@ -621,6 +613,65 @@ namespace Selenium.Core.Framework.Driver
             var random = new Random();
             return Convert.ToString(random.Next(999));
         }
+        #endregion
+
+        #region Windows Popups/Alerts
+        public void HandleFileUploadWindow(string filepath)
+        {
+            try
+            {
+                string windowTitle = GetBrowserName() == "internet explorer" ?
+                 "Choose File to Upload" : "Open";
+
+                AutoItX.WinWait(windowTitle, "File &name:", 10);
+                AutoItX.ControlSetText(windowTitle, "", "[CLASS:Edit; INSTANCE:1]", filepath);
+                AutoItX.ControlClick(windowTitle, "", "[CLASS:Button; INSTANCE:1]");
+                AutoItX.WinWaitClose(windowTitle, "File &name:", 10);
+            }
+
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public void WindowsWarningOrConfirmationAccept(string alertTitle)
+        {
+            try
+            {
+                if (AutoItX.WinExists(alertTitle) != 0)
+                {
+                    AutoItX.WinWaitActive(alertTitle);
+                    AutoItX.ControlClick(alertTitle, "", "[CLASS:Button; INSTANCE:0; TEXT:&Yes]");
+                    AutoItX.WinWaitClose(alertTitle);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public void WindowsWarningOrConfirmationDismiss(string alertTitle)
+        {
+            try
+            {
+                if (AutoItX.WinExists(alertTitle) != 0)
+                {
+                    AutoItX.WinWaitActive(alertTitle);
+                    AutoItX.ControlClick(alertTitle, "", "[CLASS:Button; INSTANCE:1; TEXT:&No]");
+                    AutoItX.WinWaitClose(alertTitle);
+                }
+            }
+
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         #endregion
     }
 }

@@ -1,4 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ImpersonatePage>
+<HotelManagementWindow>
   <field name="CustomersTab" how="name" using="Customers"/>
-</ImpersonatePage>
+</HotelManagementWindow>
