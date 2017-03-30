@@ -3,8 +3,6 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.IE;
-using OpenQA.Selenium.Remote;
-using OpenQA.Selenium.Winium;
 using Selenium.Core.Framework.Exceptions;
 using Selenium.Core.Framework.Logger;
 using Selenium.Core.Framework.Utilities;
@@ -12,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
-using System.Threading;
 
 namespace Selenium.Core.Framework.Driver
 {
@@ -85,10 +82,6 @@ namespace Selenium.Core.Framework.Driver
                         _nativeWebDriver = InitiateFirefoxDriver();
                         break;
 
-                    case DriverPlatform.Winium:
-                        _nativeWebDriver = InititeWiniumDriver();
-                        break;
-
                     default:
                         throw new Exception(browser + " is not a valid browser option");
                 }
@@ -149,29 +142,6 @@ namespace Selenium.Core.Framework.Driver
             }
 
             return new InternetExplorerDriver(_driverPath, options);
-        }
-
-        private static IWebDriver InititeWiniumDriver()
-        {
-            try
-            {
-                var path = AppDomain.CurrentDomain.BaseDirectory + @"../../../Lib/Winium.Desktop.Driver.exe";
-                Process.Start(path);
-
-                FileLogger.Log("Initiating Winium Driver");
-                var options = new DesktopOptions();
-                options.ApplicationPath = ConfigurationManager.AppSettings["ApplicationPath"];
-
-                var capabilities = (DesiredCapabilities)options.ToCapabilities();
-                var driver = new RemoteWebDriver(new Uri("http://localhost:9999"), capabilities);
-                Thread.Sleep(5000);
-                return driver;
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
         }
 
         private static void SetPageTimeout()
@@ -248,10 +218,6 @@ namespace Selenium.Core.Framework.Driver
                         KillIeProcess();
                         break;
 
-                    case DriverPlatform.Winium:
-                        KillWiniumProcess();
-                        break;
-
                     default:
                         throw new Exception(_platform + " not a valid process to kill");
                 }
@@ -262,16 +228,6 @@ namespace Selenium.Core.Framework.Driver
                 throw new DriverDisposeException(ex);
             }
 
-        }
-
-        void KillWiniumProcess()
-        {
-            var processes = Process.GetProcessesByName("Winium.Desktop.Driver");
-            
-            foreach(var process in processes)
-            {
-                process.Kill();
-            }
         }
 
         void KillChromeProcess()

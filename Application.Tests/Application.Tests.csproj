@@ -70,14 +70,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SampleTest.feature</DependentUpon>
     </Compile>
-    <Compile Include="Features\SampleWiniumTest.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>SampleWiniumTest.feature</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StepDefinitions\SampleTestStepDefinitions.cs" />
-    <Compile Include="StepDefinitions\SampleWiniumTestStepDefinition.cs" />
     <Compile Include="TestBase.cs" />
     <Compile Include="TestInitialization.cs" />
   </ItemGroup>
@@ -86,10 +80,6 @@
     <None Include="Features\SampleTest.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>SampleTest.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Features\SampleWiniumTest.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>SampleWiniumTest.feature.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
   </ItemGroup>

@@ -1,5 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<CustomersWindow>
-  <field name="AddanewCustomerButton" how="id" using="llDodaj"/>
-  <field name="RemoveaSelectedCustomerButton" how="id" using="pictureBox5"/>
-</CustomersWindow>
